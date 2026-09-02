@@ -81,7 +81,28 @@ def ingest_hipaa_data(request):
         200,
     )
 
-  except Exception as e:
+  #except Exception as e:
     # Avoid logging sensitive raw data to standard out
-    print(f"Encryption or storage failure: {str(e)}")
+  #  print(f"Encryption or storage failure: {str(e)}")
+  #  return ({"error": "Internal Processing Error"}, 500)
+
+  except GoogleAPICallError as g_err:
+    # Catch Google Cloud API specific errors (KMS or Firestore communication failures)
+    print(f"Google Cloud API error encountered: {g_err.message}")
+    return (
+        {
+            "error": "Cloud Service Integration Error",
+            "details": "Failed to communicate with encryption or database services.",
+        },
+        502,
+    )
+
+  except ValueError as v_err:
+    # Catch configuration or formatting exceptions
+    print(f"Value or formatting error: {str(v_err)}")
+    return ({"error": "Invalid Request Parameter or Configuration"}, 400)
+
+  except Exception as e:
+    # Catch-all block for any other unexpected runtime exceptions
+    print(f"Unhandled internal exception: {str(e)}")
     return ({"error": "Internal Processing Error"}, 500)
