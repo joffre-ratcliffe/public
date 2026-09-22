@@ -17,7 +17,8 @@ async function generateContent(projectId = GOOGLE_CLOUD_PROJECT, location = GOOG
 
   // Instantiate the model
   const model = vertexAI.getGenerativeModel({
-    model: 'gemini-2.5-flash', 
+    //model: 'gemini-2.5-flash', 
+    model: 'gemini-3.0-pro', 
   });
 
   try {
